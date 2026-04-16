@@ -1,0 +1,55 @@
+services:
+  ollama:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        OLLAMA_VERSION: "${OLLAMA_VERSION:-0.20.7}"
+    container_name: ollama-medgemma
+    restart: unless-stopped
+    ports:
+      # Ollama REST API — http://localhost:11434
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      # Persist downloaded models on the host so they survive container restarts
+      - ollama_models:/root/.ollama
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+      OLLAMA_DEFAULT_MODEL: "${OLLAMA_DEFAULT_MODEL:-medgemma:4b}"
+      # Keep the default model loaded in memory indefinitely (-1 = forever)
+      OLLAMA_KEEP_ALIVE: "-1"
+      # Raise for multi-user / parallel request scenarios (optional)
+      OLLAMA_NUM_PARALLEL: "${OLLAMA_NUM_PARALLEL:-1}"
+      # Gemma 3 + SWA (Sliding Window Attention) crashes during llama_init_from_model
+      # when Flash Attention is auto-enabled. Force it off.
+      OLLAMA_FLASH_ATTENTION: "0"
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s   # give time for first model pull
+
+    # ── GPU support ──────────────────────────────────────────────────────────
+    # Requires the NVIDIA Container Toolkit on the host.
+    # Remove or comment out the 'deploy' block entirely if running CPU-only.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  ollama_models:
+    driver: local
+    # To store models in a custom host path instead of a named volume, replace
+    # the block above with:
+    #
+    #   ollama_models:
+    #     driver: local
+    #     driver_opts:
+    #       type: none
+    #       o: bind
+    #       device: /your/host/path/ollama-models

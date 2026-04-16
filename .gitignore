@@ -1,0 +1,18 @@
+# Environment variables (may contain secrets)
+.env
+.env.local
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Docker volumes / data
+ollama_data/
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
