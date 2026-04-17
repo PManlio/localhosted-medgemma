@@ -15,13 +15,12 @@ services:
       - ollama_models:/root/.ollama
     environment:
       OLLAMA_HOST: "0.0.0.0"
-      OLLAMA_DEFAULT_MODEL: "${OLLAMA_DEFAULT_MODEL:-medgemma:4b}"
       # Keep the default model loaded in memory indefinitely (-1 = forever)
       OLLAMA_KEEP_ALIVE: "-1"
       # Raise for multi-user / parallel request scenarios (optional)
       OLLAMA_NUM_PARALLEL: "${OLLAMA_NUM_PARALLEL:-1}"
-      # Gemma 3 + SWA (Sliding Window Attention) crashes during llama_init_from_model
-      # when Flash Attention is auto-enabled. Force it off.
+      # Gemma 3 + SWA crashes during llama_init_from_model when Flash Attention
+      # is auto-enabled. Force it off.
       OLLAMA_FLASH_ATTENTION: "0"
     healthcheck:
       test: ["CMD", "ollama", "list"]

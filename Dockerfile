@@ -1,9 +1,10 @@
 # OLLAMA_VERSION is passed at build time from .env via docker-compose build args.
 # To pin a different version, change OLLAMA_VERSION in the .env file.
-ARG OLLAMA_VERSION=0.20.7
+ARG OLLAMA_VERSION=0.20.5
 FROM ollama/ollama:${OLLAMA_VERSION}
 
 COPY entrypoint.sh /entrypoint.sh
+COPY Modelfile /Modelfile
 RUN chmod +x /entrypoint.sh
 
 # Default model — override via OLLAMA_DEFAULT_MODEL env var

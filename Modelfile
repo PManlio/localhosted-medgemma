@@ -1,0 +1,8 @@
+# Base model pulled from HuggingFace via Ollama.
+# To switch model, change this line and update OLLAMA_DEFAULT_MODEL in .env.
+FROM hf.co/unsloth/medgemma-4b-it-GGUF:Q4_K_M
+
+# Limit context window to avoid a SIGSEGV in llama_init_from_model caused by
+# the SWA (Sliding Window Attention) KV cache on Gemma3/MedGemma.
+# 4096 = 4× the SWA sliding window (1024); safe and sufficient for most tasks.
+PARAMETER num_ctx 4096
