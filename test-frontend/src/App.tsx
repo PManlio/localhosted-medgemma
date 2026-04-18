@@ -32,7 +32,7 @@ export default function App() {
   return (
     <div className="flex h-screen flex-col bg-background">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between border-b px-4 py-3">
+      <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b bg-background px-4 py-3">
         <div className="flex items-center gap-2">
           <Activity className="h-5 w-5 text-primary" />
           <span className="font-semibold tracking-tight">MedGemma Chat</span>
@@ -71,17 +71,19 @@ export default function App() {
       <Separator />
 
       {/* Chat area */}
-      <main className="flex-1 overflow-hidden">
-        <ChatMessages messages={messages} />
-      </main>
+      <div className='mx-auto flex w-full flex-1 flex-col overflow-hidden max-w-screen-xl'>
+        <main className="min-h-0 flex-1 overflow-hidden">
+          <ChatMessages messages={messages} />
+        </main>
 
-      {/* Input */}
-      <div className="shrink-0 border-t px-4 py-3">
-        <ChatInput
-          onSend={(content, images) => void sendMessage(effectiveModel, content, images)}
-          isLoading={isLoading}
-          onCancel={cancelStream}
-        />
+        {/* Input */}
+        <div className="shrink-0 border-t px-4 py-3">
+          <ChatInput
+            onSend={(content, images) => void sendMessage(effectiveModel, content, images)}
+            isLoading={isLoading}
+            onCancel={cancelStream}
+          />
+        </div>
       </div>
 
       <ModelDownloader open={modelsOpen} onOpenChange={setModelsOpen} />
