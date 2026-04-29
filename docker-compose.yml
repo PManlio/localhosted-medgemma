@@ -32,13 +32,13 @@ services:
     # ── GPU support ──────────────────────────────────────────────────────────
     # Requires the NVIDIA Container Toolkit on the host.
     # Remove or comment out the 'deploy' block entirely if running CPU-only.
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      devices:
+    #        - driver: nvidia
+    #          count: all
+    #          capabilities: [gpu]
 
 volumes:
   ollama_models:
